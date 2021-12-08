@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="toastify.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="form">
+        <form id="register">
+            <div class="text-part">
+                <h2>Create account</h2>
+                <p>Already have an account? <a href="/signin">Sign in</a></p>
+            </div>
+            <div class="inputBox-flex">
+                <input type="text" name="Firstname" required placeholder="First Name" id="Firstname" />
+                <input type="text" name="Lastname" required placeholder="Last Name" id="Lastname" />
+            </div>
+            <div class="inputBox">
+                <input type="email" name="Email" required placeholder="Email" id="Email" />
+            </div>
+            <div class="inputBox">
+                <input type="date" name="DOB" required id="DOB" />
+            </div>
+            <div class="inputBox">
+                <input type="password" name="Password" required placeholder="Password" id="Password" />
+            </div>
+            <div class="inputBox">
+                <input type="password" name="ConfirmPassword" required placeholder="Confirm Password"
+                    id="ConfirmPassword" />
+            </div>
+            <div class="inputBox">
+                <input type="radio" required name="Gender" id="genderMale" value="Male">Male
+                <input type="radio" required name="Gender" id="genderFemale" value="Female">Female
+                <input type="radio" required name="Gender" id="genderOther" value="Other">Other
+            </div>
+            <div class="submitBox">
+                <button type="submit" name="submit" id="submit" >Sign up</button>
+            </div>
+            <!-- <div class="additional">
+                <input type="checkbox" required name="agree" id="agree" />
+                I have read and agree to the <a href="#" diab>Terms and Conditions</a>
+            </div> -->
+        </form>
+    </div>
+    <script src="/js/main.js"></script>
+    <script src="toastify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#register").submit(function (e) {
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                var form = $(this);// agar es6 wale me karna h to $("#register") use kar, varna ye timesaver accha h
+                var url = '/signup';
+                $("#submit").attr("disabled", "true");
+                $("#submit").html("<span>Loading...</span>");
+                
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: data => {
+                        if (data.status == "error") {
+                            showIt(data.message, "error");    
+                            $("#submit").removeAttr("disabled");
+                            $("#submit").html("<span>Sign up</span>");
+
+
+                        }else{
+                            window.location.href = '/verifyOtp?registered=true';
+                        }
+                    }
+                });
+
+
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>

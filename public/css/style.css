@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.noBxShdw {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.form {
+  color: #777;
+  background: linear-gradient(130deg, #0c8ad3, #2f6ef7);
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.form form {
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  padding: 50px;
+  border-radius: 10px;
+  width: 450px;
+}
+
+.form form .text-part {
+  margin: 0 0 25px 0;
+  text-align: center;
+}
+
+.form form .text-part h2 {
+  font-size: 2rem;
+}
+
+.form form .text-part p {
+  font-size: 0.9rem;
+}
+
+.form form .inputBox-flex,
+.form form .inputBox {
+  margin: 15px 0;
+}
+
+.form form .inputBox-flex input,
+.form form .inputBox input {
+  padding: 10px;
+  margin: 0 5px;
+  background-color: #f8f8f8;
+  border: none;
+  outline: none;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.form form .inputBox-flex input::-webkit-input-placeholder,
+.form form .inputBox input::-webkit-input-placeholder {
+  font-style: italic;
+}
+
+.form form .inputBox-flex input:-ms-input-placeholder,
+.form form .inputBox input:-ms-input-placeholder {
+  font-style: italic;
+}
+
+.form form .inputBox-flex input::-ms-input-placeholder,
+.form form .inputBox input::-ms-input-placeholder {
+  font-style: italic;
+}
+
+.form form .inputBox-flex input::placeholder,
+.form form .inputBox input::placeholder {
+  font-style: italic;
+}
+
+.form form .inputBox-flex input:focus,
+.form form .inputBox input:focus {
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.form form .inputBox-flex input[type="radio"],
+.form form .inputBox input[type="radio"] {
+  padding: auto;
+  margin: 0 5px;
+  cursor: pointer;
+  width: auto;
+}
+
+.form form .inputBox-flex input[type="radio"]:focus,
+.form form .inputBox input[type="radio"]:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  background-color: transparent;
+}
+
+.form form .inputBox-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.form form .inputBox-flex input {
+  width: 170px;
+}
+
+.form form .submitBox {
+  margin: 15px 0;
+  position: relative;
+}
+
+.form form .submitBox button {
+  padding: 10px;
+  margin: 0 5px;
+  background-color: #0c8ad3;
+  border: none;
+  outline: none;
+  width: 100%;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.form form .submitBox button:hover {
+  background-color: #2f6ef7;
+}
+
+.form form .submitBox button:disabled {
+  opacity: 0.5;
+}
+
+.form form .submitBox::after {
+  content: "\f061";
+  font-size: 1.3rem;
+  position: absolute;
+  color: #fff;
+  right: 0;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: "Font Awesome 5 Pro";
+}
+
+.form form .additional {
+  margin: 15px 0;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+/*# sourceMappingURL=style.css.map */

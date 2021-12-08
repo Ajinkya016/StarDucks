@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="toastify.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="form">
+        <form id="login">
+            <div class="text-part">
+                <h2>Welcome back!</h2>
+                <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            </div>
+            <div class="inputBox">
+                <input type="email" required name="Email" placeholder="Email" id="Email" />
+            </div>
+            <div class="inputBox">
+                <input type="password" required name="Password" placeholder="Password" id="Password" />
+            </div>
+            <div class="submitBox">
+                <button type="submit" name="submit" id="submit">Sign in</button>
+            </div>
+            <div class="additional">
+                <p><a href="/forgetPassword">Forgot password?</a></p>
+            </div>
+        </form>
+    </div>
+    <script src="/js/main.js"></script>
+    <script src="toastify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+         
+            const registered = getParameterByName('verified');
+            if (registered === "true") {
+                showIt("your account has been verified successfully", "success");    
+            }
+            $("#login").submit(function (e) {
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                var form = $(this);
+                var url = '/signin';
+                $("#submit").attr("disabled", "true");
+                $("#submit").html("<span>Loading...</span>");
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: data => {
+                        if (data.status == "error") {
+                            showIt(data.message, "error");    
+                            $("#submit").removeAttr("disabled");
+                            $("#submit").html("<span>Sign in</span>");
+                        
+                        }else{
+                            window.location = '/';
+                        }
+                    }
+                });
+
+
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>

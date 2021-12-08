@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.noBxShdw{box-shadow: none;}
+
+.form {
+    color:#777;
+    background: linear-gradient(130deg, #0c8ad3, #2f6ef7);
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    form {
+        background-color: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 2px 10px rgba($color: #000000, $alpha: 0.5);
+        padding: 50px;
+        border-radius: 10px;
+        width: 450px;
+        .text-part {
+            margin: 0 0 25px 0;
+            text-align: center;
+
+            h2 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 0.9rem;
+            }
+        }
+        .inputBox-flex,
+        .inputBox {
+            margin: 15px 0;
+            input {
+                padding: 10px;
+                margin: 0 5px;
+                background-color: #f8f8f8;
+                border: none;
+                outline: none;
+                width: 100%;
+                border-radius: 10px;
+                &::placeholder {
+                    font-style: italic;
+                }
+                &:focus{
+                    background-color: #fff;
+                    box-shadow: 0 0 2px rgba($color: #000000, $alpha: 0.5);
+                }
+            }
+            
+            input[type="radio"]{
+                padding: auto;
+                margin: 0 5px;
+                cursor: pointer;
+                width: auto;
+                &:focus{
+                    box-shadow: none;
+                    background-color: transparent;
+                }
+            }
+        }
+        .inputBox-flex {
+            display: flex;
+            input {
+                width: 170px;
+            }
+        }
+        .submitBox{
+            margin: 15px 0;
+            position: relative;
+            button{
+                padding: 10px;
+                margin: 0 5px;
+                background-color: #0c8ad3;
+                border: none;
+                outline: none;
+                width: 100%;
+                border-radius: 10px;
+                color: #fff;
+                font-size: 1rem;
+                cursor: pointer;
+                &:hover{
+                    background-color: #2f6ef7;
+                }
+                &:disabled {
+                    opacity: 0.5;
+                }
+            }
+            &::after{
+                content: "\f061";
+                font-size: 1.3rem;
+                position: absolute;
+                color: #fff;
+                right:0;
+                top:50%;
+                transform: translate(-50%, -50%);
+                font-family: "Font Awesome 5 Pro";
+            }
+        }
+        .additional{
+            margin: 15px 0;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }
+}

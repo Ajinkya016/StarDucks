@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="toastify.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="form">
+        <form id="verify">
+            <div class="text-part">
+                <h2>Verify your <b>account</b></h2>
+                <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            </div>
+            <div class="inputBox">
+                <input type="email" required name="Email" placeholder="Email" id="Email" />
+            </div>
+            <div class="inputBox">
+                <input type="password" required name="Password" placeholder="Password" id="Password" />
+            </div>
+            <div class="inputBox">
+                <input type="text" required name="code" placeholder="Enter your code" id="code" />
+            </div>
+            <div class="submitBox">
+                <button type="submit" name="submit" id="submit">Verify</button>
+            </div>
+            <div class="additional">
+                <p><a href="#">Forgot password?</a></p>
+            </div>
+        </form>
+    </div>
+    <script src="/js/main.js"></script>
+    <script src="toastify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+            const registered = getParameterByName('registered');
+            if (registered === "true") {
+                Toastify({
+                    text: 'You have been registered successfully',
+                    duration: 3000,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    style: {
+                        boxShadow: 'none',
+                        backgroundImage: 'linear-gradient(90deg, #228B22 5px, #fff 5px)',
+                        color: "#000"
+                    },
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+            $("#verify").submit(function (e) {
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                var form = $(this);
+                var url = '/verifyOtp';
+                $("#submit").attr("disabled", "true");
+                $("#submit").html("<span>Loading...</span>");
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: data => {
+                        if (data.status == "error") {
+                            showIt(data.message, "error"); 
+                            $("#submit").removeAttr("disabled");
+                            $("#submit").html("<span>Verify</span>");   
+                        } else {
+                            // console.log(data.message);
+                            window.location.href = '/signin?verified=true'
+                        }
+                    }
+                });
+
+
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
