@@ -1,6 +1,4 @@
 "use strict";
-//config dotenv
-require('dotenv').config();
 
 //require all dependencies
 const express = require('express');
@@ -28,14 +26,14 @@ app.use(express.urlencoded({ extended: false }));
 require('./db/connection'); // connect the database (mongodb)
 
 //Json Web Token secret key, basically from .env file
-const JWTsecretToken = process.env.JWT_SECRET_TOKEN;
+const JWTsecretToken = 'JSONWEBTOKENsecretqwertuiopasdfghjklzxcvbnm';
 
 //mail details
 const mailSendDetails = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'ajinkya.kamble016@gmail.com', //your email here
-        pass: process.env.PASS //your password here. note: you DON'T have to put your ACTUAL password. Google gives different 15 digit password for this purpose.
+        pass:'rkjegynfsppydend' //your password here. note: you DON'T have to put your ACTUAL password. Google gives different 15 digit password for this purpose.
     }
 });
 
