@@ -175,8 +175,9 @@ app.post('/signup', async (req, res) => {
             };
 
             //mail the user and save the new user. NOTE: ERRORS will be displayed
-            await mailSendDetails.sendMail(mailOptions);
             await newUser.save();
+            await mailSendDetails.sendMail(mailOptions);
+            
 
             //SUCCESS!
             res.json({
