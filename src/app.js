@@ -26,14 +26,14 @@ app.use(express.urlencoded({ extended: false }));
 require('./db/connection'); // connect the database (mongodb)
 
 //Json Web Token secret key, basically from .env file
-const JWTsecretToken = 'JSONWEBTOKENsecretqwertuiopasdfghjklzxcvbnm';
+const JWTsecretToken = process.env.JWT_SECRET_TOKEN;
 
 //mail details
 const mailSendDetails = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'ajinkya.kamble016@gmail.com', //your email here
-        pass:'rkjegynfsppydend' //your password here. note: you DON'T have to put your ACTUAL password. Google gives different 15 digit password for this purpose.
+        pass: process.env.PASS //your password here. note: you DON'T have to put your ACTUAL password. Google gives different 15 digit password for this purpose.
     }
 });
 
@@ -175,9 +175,8 @@ app.post('/signup', async (req, res) => {
             };
 
             //mail the user and save the new user. NOTE: ERRORS will be displayed
-            await newUser.save();
             await mailSendDetails.sendMail(mailOptions);
-            
+            await newUser.save();
 
             //SUCCESS!
             res.json({
