@@ -1,4 +1,4 @@
-windoe.addEventListener("load", () => {
+window.addEventListener("load", () => {
     "use strict"
 const showIt = (data, status) => {
     data.split(',').forEach(msg => {
