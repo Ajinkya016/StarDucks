@@ -1,4 +1,5 @@
-"use strict"
+windoe.addEventListener("load", () => {
+    "use strict"
 const showIt = (data, status) => {
     data.split(',').forEach(msg => {
         Toastify({
@@ -25,3 +26,5 @@ const getParameterByName = (name, url = window.location.href) => {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+});

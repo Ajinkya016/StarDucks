@@ -6,10 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="toastify.css">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <%- include('./partials/links.ejs') %>
 </head>
 
 <body>
@@ -36,12 +33,9 @@
             </div>
         </form>
     </div>
-    <script src="/js/main.js"></script>
-    <script src="toastify.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            
+
             const registered = getParameterByName('registered');
             if (registered === "true") {
                 Toastify({
@@ -74,9 +68,9 @@
                     data: form.serialize(),
                     success: data => {
                         if (data.status == "error") {
-                            showIt(data.message, "error"); 
+                            showIt(data.message, "error");
                             $("#submit").removeAttr("disabled");
-                            $("#submit").html("<span>Verify</span>");   
+                            $("#submit").html("<span>Verify</span>");
                         } else {
                             // console.log(data.message);
                             window.location.href = '/signin?verified=true'
