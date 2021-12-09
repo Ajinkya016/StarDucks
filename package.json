@@ -1,24 +1,29 @@
 {
-  "name": "noteit",
+  "name": "starducks",
   "version": "1.0.0",
-  "description": "An app for keeping notes or storing it",
-  "main": "src/app.js",
+  "description": "A comic book, by jeet and Ajinkya",
+  "main": "./src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app",
-    "dev": "nodemon src/app",
-    "production": "git add . && git commit -m bugs && git push heroku"
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ajinkya016/StarDucks.git"
   },
   "keywords": [
-    "Noteit",
-    "note",
-    "notes",
-    "study",
-    "education"
+    "Starducks"
   ],
-  "author": "Ajinkya kamble",
+  "author": "Ajinkya Kamble",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ajinkya016/StarDucks/issues"
+  },
+  "homepage": "https://github.com/Ajinkya016/StarDucks#readme",
   "dependencies": {
+    "@tailwindcss/forms": "^0.3.4",
+    "autoprefixer": "^10.4.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
@@ -30,6 +35,7 @@
     "mongoose": "^5.13.2",
     "nodemailer": "^6.7.1",
     "sweetalert2": "^11.2.1",
+    "tailwindcss": "^2.2.19",
     "toastify-js": "^1.11.1"
   }
 }

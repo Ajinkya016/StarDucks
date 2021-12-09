@@ -16,17 +16,20 @@
   color: #777;
   background: linear-gradient(130deg, #0c8ad3, #2f6ef7);
   height: 100vh;
-  width: 100%;
-  position: relative;
+  width: 100vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .form form {
   background-color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
   -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   padding: 50px;
@@ -109,10 +112,28 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
 }
 
 .form form .inputBox-flex input {
   width: 170px;
+}
+
+@media (max-width: 1204px) {
+  .form form .inputBox-flex input {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 1204px) {
+  .form form .inputBox-flex {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
 }
 
 .form form .submitBox {
@@ -157,5 +178,23 @@
   margin: 15px 0;
   padding: 10px;
   font-size: 0.9rem;
+}
+
+@media (max-width: 1204px) {
+  .form form {
+    width: 40vw;
+  }
+}
+
+@media (max-width: 1050px) {
+  .form form {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 758px) {
+  .form form {
+    width: 100vw;
+  }
 }
 /*# sourceMappingURL=style.css.map */

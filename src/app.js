@@ -88,6 +88,7 @@ app.get('/resetPassword/:_id/:token', async (req, res, next) => {
     }
 });
 
+
 app.get('/logout',auth, async (req, res) => {
     //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {

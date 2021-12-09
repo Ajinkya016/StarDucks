@@ -9,7 +9,6 @@ const showIt = (data, status) => {
             gravity: "top", // `top` or `bottom`
             position: "right", // `left`, `center` or `right`
             style: {
-                boxShadow: 'none',
                 backgroundImage: status !== "success" ? 'linear-gradient(90deg, #ff3021 5px, #fff 5px)' : 'linear-gradient(90deg, #228B22 5px, #fff 5px)',
                 color: "#000"
             },
