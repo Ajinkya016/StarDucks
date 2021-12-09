@@ -1,4 +1,4 @@
-window.addEventListener("load", () => {
+// window.addEventListener("load", () => {
     "use strict"
 const showIt = (data, status) => {
     data.split(',').forEach(msg => {
@@ -27,4 +27,4 @@ const getParameterByName = (name, url = window.location.href) => {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
-});
+// });
