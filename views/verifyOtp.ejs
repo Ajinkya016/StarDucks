@@ -14,7 +14,7 @@
         <div class="flex-1 flex flex-col justify-center py-10 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
                 <div>
-                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-700">
                         Verify Your Account
                     </h2>
                     <p class="mt-2 text-sm text-gray-600">
@@ -26,6 +26,7 @@
                 </div>
 
                 <div class="mt-8">
+                    <div class="alert"></div>
                     <div class="mt-6">
                         <form id="verify" class="space-y-6">
                             <div>
@@ -85,20 +86,7 @@
 
             const registered = getParameterByName('registered');
             if (registered === "true") {
-                Toastify({
-                    text: 'You have been registered successfully',
-                    duration: 3000,
-                    close: true,
-                    gravity: "top", // `top` or `bottom`
-                    position: "right", // `left`, `center` or `right`
-                    style: {
-                        boxShadow: 'none',
-                        backgroundImage: 'linear-gradient(90deg, #228B22 5px, #fff 5px)',
-                        color: "#000"
-                    },
-                    stopOnFocus: true, // Prevents dismissing of toast on hover
-                    onClick: function () { } // Callback after click
-                }).showToast();
+                showIt(data.message, "success");    
             }
             $("#verify").submit(function (e) {
 

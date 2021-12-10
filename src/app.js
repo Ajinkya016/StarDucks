@@ -39,6 +39,9 @@ const mailSendDetails = nodemailer.createTransport({
 
 //GET method routes.
 app.get('/', auth, (req, res) => res.render('index'));
+app.get('/terms&conditions', (req, res) => res.render('t&c'));
+app.get('/privacyPolicy', (req, res) => res.render('privacyPolicy'));
+app.get('/cookiePolicy', (req, res) => res.render('cookiePolicy'));
 app.get('/signin', (req, res) => res.render('signin'));
 app.get('/signup', (req, res) => res.render('signup'));
 app.get('/verifyOtp', (req, res) => res.render('verifyOtp'));
