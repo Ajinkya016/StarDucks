@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const JWT = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const static_path = path.join(__dirname, "../public");
 const toastifyPath = path.join(__dirname, "../node_modules/toastify-js/src/");
 const sweetalertPath = path.join(__dirname, "../node_modules/sweetalert2/dist/");
@@ -179,9 +179,8 @@ app.post('/signup', async (req, res) => {
             };
 
             //mail the user and save the new user. NOTE: ERRORS will be displayed
-            const userrr= await newUser.save();
-            console.log(userrr);
             await mailSendDetails.sendMail(mailOptions);
+            await newUser.save();
 
             //SUCCESS!
             res.json({
