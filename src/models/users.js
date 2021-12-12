@@ -38,25 +38,9 @@ const userSchema = new mongoose.Schema({
     code: {
         type: Number,
         required:true
-    },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }]
+    }
 });
 
-userSchema.methods.generateAuthToken = async function (secretKey) {
-    try {
-        const token = jwt.sign({id:this._id}, secretKey);
-        this.tokens = this.tokens.concat({token});
-        await this.save();
-        return token;
-    } catch (e) {
-        console.log(e);
-    }
-}
 userSchema.pre("save", async function (next) {
     if(this.isModified('Password')){
        this.Password = await bcrypt.hash(this.Password, 12);

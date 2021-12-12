@@ -1,5 +1,7 @@
 "use strict";
 
+require('dotenv').config()
+
 //require all dependencies
 const express = require('express');
 const app = express();
@@ -8,17 +10,18 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const JWT = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const port = process.env.PORT || 4000;
-const static_path = path.join(__dirname, "../public");
-const toastifyPath = path.join(__dirname, "../node_modules/toastify-js/src/");
+const port = process.env.PORT || 4000 - 1000;
+const static_path = path.join(__dirname, "../public/");
+const alpinejs = path.join(__dirname, "../node_modules/alpinejs/dist/");
 const sweetalertPath = path.join(__dirname, "../node_modules/sweetalert2/dist/");
 const User = require('./models/users');
+const Token = require('./models/tokens');
 const auth = require("./middleware/auth");//needed to secure page from unauthorized people i.e. those who didn't log in/
 
 //middleware and extra stuff
 app.set('view engine', 'ejs');//template/view engine is "EJS"
 app.use(express.static(static_path));
-app.use(express.static(toastifyPath));
+app.use(express.static(alpinejs));
 app.use(express.static(sweetalertPath));
 app.use(express.json());
 app.use(cookieParser());//to get value of cookie
@@ -91,44 +94,28 @@ app.get('/resetPassword/:_id/:token', async (req, res, next) => {
     }
 });
 
-
-app.get('/logout',auth, async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
+app.get('/logout', auth, async (req, res) => {
     try {
-        //clear cookie
-        res.clearCookie('jwt');
-        //filter the token from database also.
-        req.user.tokens = req.user.tokens.filter(currElem => currElem.token !== req.token);
-
-
-        // //save the new user with the token removed
-        const ll = await req.user.save();
-        console.log(ll);
-        res.render('signin')
+        const { token, user } = req;
+        await Token.deleteOne({ user: user._id, token });
+        res.clearCookie('jwt').render('signin');
     } catch (e) {
-        res.send(500).send(e)
+        console.log(e);
     }
 });
 
 app.get('/logoutall', auth, async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //clear cookie
-        res.clearCookie('jwt');
-        //filter the token from database also.
-        req.user.tokens = [];
-
-        //save the new user with the token removed
-        await req.user.save();
-        console.log('logged out successfully');
-
-        res.render('signin')
+        const user = req.user;
+        await Token.deleteMany({ user: user._id });
+        res.clearCookie('jwt').render('signin');
     } catch (e) {
-        res.send(500).send(e)
+        console.log(e);
     }
 });
 
-
+//famous 404 error xD
+app.get('*', (req, res) => res.status(404).render('404'));
 //POST method routes
 
 app.post('/signup', async (req, res) => {
@@ -138,8 +125,8 @@ app.post('/signup', async (req, res) => {
         const { Firstname, Lastname, Email, DOB, Gender, Password, ConfirmPassword } = req.body;
         const Age = Math.floor(((Date.now() - new Date(DOB)) / (31557600000)));//calculate the age from DOB
         const isEmail = await User.find({ Email }); //Find out weather the email is already in use or not
-
         const errs = [];//make an array containing errors, by default there are no errors. errors will increment in this array.
+
         if (isEmail.length >= 1) {
             errs.push('User already exists');
         }
@@ -158,7 +145,7 @@ app.post('/signup', async (req, res) => {
             const code = Math.floor(Math.random() * 90000) + 10000;
 
             //register an usr with the details provided
-            const newUser = new User({
+            await new User({
                 Firstname,// like Ajinkya
                 Lastname,//like Kamble
                 Email,// like (are you interested in knowing my email?)
@@ -168,7 +155,7 @@ app.post('/signup', async (req, res) => {
                 Joined_at: new Date(),
                 emailVerification: false,
                 code
-            });
+            }).save();
 
             //prepare the mail
             const mailOptions = {
@@ -177,11 +164,8 @@ app.post('/signup', async (req, res) => {
                 subject: 'Email Verification Code',
                 html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Email Verification Code is</h3><br/><h1 style="color:#2f6ef7"><b>' + code + '</b></h1>.<br/></br><p>Dear' + Firstname + " " + Lastname + ',your verification code is mentioned above. Don\'t share this with anybody else.<br/>Thanks</p></div>'// plain text body
             };
-
             //mail the user and save the new user. NOTE: ERRORS will be displayed
             await mailSendDetails.sendMail(mailOptions);
-            await newUser.save();
-
             //SUCCESS!
             res.json({
                 status: "success",
@@ -224,8 +208,14 @@ app.post('/signin', async (req, res) => {
                 //if password matches, then, check if the email is verified or not
                 if (user.emailVerification) {
                     //if the email is verified, then, generate authentication token for the user, in order to keep the user logged in and secure the secret pages
-                    const token = await user.generateAuthToken(JWTsecretToken);//function mentioned in ./models/users.js
+                    const token = JWT.sign({ id: user._id }, JWTsecretToken);
 
+                    const newToken = new Token({
+                        user: user._id,
+                        token
+                    })
+
+                    await newToken.save();
                     //store the token in cookie
                     res.cookie("jwt", token, {
                         expires: new Date(Date.now() + 900000), // expires in : your time in miliseconds
@@ -344,8 +334,7 @@ app.post('/forgotPasswprd', async (req, res, next) => {
             const token = JWT.sign(payload, secret, { expiresIn: '30m' });
 
             //generate a link from user's id and token
-            const link = `http://127.0.0.1:${port}/resetPassword/${user._id}/${token}`;
-            console.log(link);
+            const link = `https://starducks.herokuapp.com/resetPassword/${user._id}/${token}`;
             //send the mail
             const mailOptions = {
                 from: 'ajinkya.kamble016@email.com',
@@ -373,7 +362,7 @@ app.post('/forgotPasswprd', async (req, res, next) => {
 });
 
 
-app.post('/resetPassword/:_id/:token', async (req, res, next) => {
+app.post('/resetPassword/:_id/:token', async (req, res) => {
     //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
         //get the variables used in url
