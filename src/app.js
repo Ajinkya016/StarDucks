@@ -37,6 +37,7 @@ app.get('/', auth, async (req, res) => {
     res.render('index', {
         TotalUsers: await User.estimatedDocumentCount(),
         _id: req.user._id,
+        user: req.user,
         email: req.user.Email
     });
 });
