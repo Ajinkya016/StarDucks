@@ -1,8 +1,6 @@
 "use strict";
 
 require('dotenv').config()
-
-//require all dependencies
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -13,35 +11,39 @@ const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 4000 - 1000;
 const static_path = path.join(__dirname, "../public/");
 const alpinejs = path.join(__dirname, "../node_modules/alpinejs/dist/");
-const sweetalertPath = path.join(__dirname, "../node_modules/sweetalert2/dist/");
+const aosPath = path.join(__dirname, "../node_modules/aos/dist/");
 const User = require('./models/users');
 const Token = require('./models/tokens');
-const auth = require("./middleware/auth");//needed to secure page from unauthorized people i.e. those who didn't log in/
-
-//middleware and extra stuff
-app.set('view engine', 'ejs');//template/view engine is "EJS"
+const Message = require('./models/messages');
+const auth = require("./middleware/auth");
+const admin = require("./middleware/admin");
+app.set('view engine', 'ejs');
 app.use(express.static(static_path));
 app.use(express.static(alpinejs));
-app.use(express.static(sweetalertPath));
+app.use(express.static(aosPath));
 app.use(express.json());
-app.use(cookieParser());//to get value of cookie
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-require('./db/connection'); // connect the database (mongodb)
-
-//Json Web Token secret key, basically from .env file
+require('./db/connection');
 const JWTsecretToken = process.env.JWT_SECRET_TOKEN;
-
-//mail details
 const mailSendDetails = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'ajinkya.kamble016@gmail.com', //your email here
-        pass: process.env.PASS //your password here. note: you DON'T have to put your ACTUAL password. Google gives different 15 digit password for this purpose.
+        user: 'starduckstps@gmail.com',
+        pass: process.env.PASS
     }
 });
+app.get('/', auth, async (req, res) => {
+    res.render('index', {
+        TotalUsers: await User.estimatedDocumentCount(),
+        _id: req.user._id,
+        email: req.user.Email
+    });
+});
 
-//GET method routes.
-app.get('/', auth, (req, res) => res.render('index'));
+app.get('/admin', admin, async (req, res) => {
+    res.send("adminsONLY")
+})
 app.get('/terms&conditions', (req, res) => res.render('t&c'));
 app.get('/privacyPolicy', (req, res) => res.render('privacyPolicy'));
 app.get('/cookiePolicy', (req, res) => res.render('cookiePolicy'));
@@ -50,30 +52,19 @@ app.get('/signup', (req, res) => res.render('signup'));
 app.get('/verifyOtp', (req, res) => res.render('verifyOtp'));
 app.get('/forgetPassword', (req, res, next) => res.render('forgetPassword'));
 app.get('/resetPassword/:_id/:token', async (req, res, next) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //get the parameters of the url (node gives us facility to get custom url with help of ":" symbol i.e. ":id" or ":token" in this case.)
         const { _id, token } = req.params;
-
-        //Get the user
         const user = await User.findOne({ _id });
-
-        //check if the user with the id exists or not
         if (user) {
-            //if user is true i.e. user with that id exists, then check the secret. NOTE: THIS SECRET IS DIFFERENT FROM JETsecretToken variable. pls go through line number 219 and 316 of this code, i.e. ./app.js
             const secret = JWTsecretToken + user.Password;
-
-            //verify token
             JWT.verify(token, secret, (err, decode) => {
                 if (err) {
-                    //if token is not matching with the secret, throw error.
-                    //this error may occur if id is valid one but token is wrong or of another user.
+
                     res.render('resetPassword', {
                         status: "error",
                         message: "This link is invalid"
                     });
                 } else {
-                    //SUCCESS!!!
                     res.render('resetPassword', {
                         status: 'success',
                         email: user.Email,
@@ -83,14 +74,13 @@ app.get('/resetPassword/:_id/:token', async (req, res, next) => {
             });
 
         } else {
-            //if user is false i.e. user with that id DOES NOT exist,then send error message
             res.render('resetPassword', {
                 status: "error",
                 message: "This link is invalid"
             });
         }
     } catch (e) {
-        console.log(e); //if anything goes wrong, but nothing will go as "await document.findOne()" returns boolean
+        console.log(e);
     }
 });
 
@@ -113,19 +103,14 @@ app.get('/logoutall', auth, async (req, res) => {
         console.log(e);
     }
 });
-
-//famous 404 error xD
 app.get('*', (req, res) => res.status(404).render('404'));
-//POST method routes
 
 app.post('/signup', async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //Get the credentials
         const { Firstname, Lastname, Email, DOB, Gender, Password, ConfirmPassword } = req.body;
-        const Age = Math.floor(((Date.now() - new Date(DOB)) / (31557600000)));//calculate the age from DOB
-        const isEmail = await User.find({ Email }); //Find out weather the email is already in use or not
-        const errs = [];//make an array containing errors, by default there are no errors. errors will increment in this array.
+        const Age = Math.floor(((Date.now() - new Date(DOB)) / (31557600000)));
+        const isEmail = await User.find({ Email });
+        const errs = [];
 
         if (isEmail.length >= 1) {
             errs.push('User already exists');
@@ -138,50 +123,39 @@ app.post('/signup', async (req, res) => {
         if (Age < 13) {
             errs.push('You are too small for having an account');
         }
-
-        //if no errors are there:
         if (errs.length == 0) {
-            //generate a random code for email verification purpose
             const code = Math.floor(Math.random() * 90000) + 10000;
-
-            //register an usr with the details provided
             await new User({
-                Firstname,// like Ajinkya
-                Lastname,//like Kamble
-                Email,// like (are you interested in knowing my email?)
+                Firstname,
+                Lastname,
+                Email,
                 Password,
                 Gender,
                 Age,
+                DOB,
                 Joined_at: new Date(),
                 emailVerification: false,
                 code
             }).save();
-
-            //prepare the mail
             const mailOptions = {
-                from: 'ajinkya.kamble016@email.com',
+                from: 'starduckstps@gmail.com',
                 to: Email,
                 subject: 'Email Verification Code',
-                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Email Verification Code is</h3><br/><h1 style="color:#2f6ef7"><b>' + code + '</b></h1>.<br/></br><p>Dear' + Firstname + " " + Lastname + ',your verification code is mentioned above. Don\'t share this with anybody else.<br/>Thanks</p></div>'// plain text body
+                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Email Verification Code is</h3><br/><h1 style="color:#2f6ef7"><b>' + code + '</b></h1>.<br/></br><p>Dear' + Firstname + " " + Lastname + ',your verification code is mentioned above. Don\'t share this with anybody else.<br/>Thanks</p></div>'
             };
-            //mail the user and save the new user. NOTE: ERRORS will be displayed
             await mailSendDetails.sendMail(mailOptions);
-            //SUCCESS!
             res.json({
                 status: "success",
                 message: "You have been registered!"
             });
         } else {
-            //if there are error(s). works perfectly fine with single error also.
             let resultTxtError = "";
             errs.forEach(element => {
-                resultTxtError += element + ',';  //store errors in STRING
+                resultTxtError += element + ',';
             });
-
-            //send error
             res.json({
                 status: "error",
-                message: resultTxtError.slice(0, -1) //to remove extra "," at end just to ensure no empty element is created when we convert string to array.
+                message: resultTxtError.slice(0, -1)
             });
         }
 
@@ -192,22 +166,15 @@ app.post('/signup', async (req, res) => {
 });
 
 app.post('/signin', async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //Get the credentials
         const { Email, Password } = req.body;
-
-        //Find the user
         const user = await User.findOne({ Email });
 
         if (user) {
-            //if user with that email exists, then, compare the password of user with the one in database
             const result = await bcrypt.compare(Password, user.Password);
 
             if (result) {
-                //if password matches, then, check if the email is verified or not
                 if (user.emailVerification) {
-                    //if the email is verified, then, generate authentication token for the user, in order to keep the user logged in and secure the secret pages
                     const token = JWT.sign({ id: user._id }, JWTsecretToken);
 
                     const newToken = new Token({
@@ -216,76 +183,58 @@ app.post('/signin', async (req, res) => {
                     })
 
                     await newToken.save();
-                    //store the token in cookie
                     res.cookie("jwt", token, {
-                        expires: new Date(Date.now() + 900000), // expires in : your time in miliseconds
-                        httpOnly: true //no scripting language can chenge the cookie for eg: JavaScript (vanilla)
+                        expires: new Date(Date.now() + 7200000),
+                        httpOnly: true
                     }).json({
-                        //SUCCESS!
                         status: "success",
                         message: "User logged in successfully"
                     });
                 } else {
-                    //if the email is NOT verified, then, send error
                     res.json({
                         status: "error",
                         message: "Pls Verify your email address."
                     });
                 }
             } else {
-                //if password do not match
                 res.json({
                     status: "error",
                     message: "Invalid login Details."
                 });
             }
         } else {
-            //if user with the email does not exists, then, send error
             res.json({
                 status: "error",
                 message: "Invalid login Details."
             });
         }
     } catch (e) {
-        //anything goes wrong, will come here. for eg: error in generating jsonwebtoken
         console.error(e);
     }
 });
 
 app.post('/verifyOtp', async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //Get the credentials
         const { Email, Password, code } = req.body;
-
-        //find the user
         const user = await User.findOne({ Email });
 
         if (user) {
-            //if user with that email exists, then, compare the password of user with the one in database
             const result = await bcrypt.compare(Password, user.Password);
 
             if (result) {
-                //if password matches, then, check if the email is verified or not
                 if (user.emailVerification) {
-                    //if the user is already verified, send error
                     res.json({
                         status: "error",
                         message: "You Have already verified your account."
                     });
                 } else {
-                    //if user is not verified, then, check the otp (one time password) sent to him in mail
                     if (user.code == code) {
-                        //if otp matches, then, verify the user
                         await User.updateMany({ Email }, { code: 0, emailVerification: true });
-
-                        //SUCCESS!
                         res.json({
                             status: "success",
                             message: "User verified successfully"
                         });
                     } else {
-                        //if otp does not match, send error
                         res.json({
                             status: "error",
                             message: "Wrong OTP!"
@@ -293,64 +242,46 @@ app.post('/verifyOtp', async (req, res) => {
                     }
                 }
             } else {
-                //if password do not match
                 res.json({
                     status: "error",
                     message: "Invalid login details"
                 });
             }
         } else {
-            //if user with the email does not exists, then, send error
             res.json({
                 status: "error",
                 message: "Invalid login details"
             });
         }
     } catch (e) {
-        // rather not say
         console.error(e);
     }
 });
 
 app.post('/forgotPasswprd', async (req, res, next) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //get credentials (ONLY email in this case)
         const { Email } = req.body;
-
-        //find the user
         const user = await User.findOne({ Email });
         if (user) {
-            //if user with that email exists, then, make a secret with previous jsonwebtoken secret to make it secure. 
             const secret = JWTsecretToken + user.Password;
-
-            //make the jwt info
             const payload = {
                 id: user._id,
                 email: user.Email
             }
-
-            //create a token with jwt info ( make it expire in 30minutes);
             const token = JWT.sign(payload, secret, { expiresIn: '30m' });
-
-            //generate a link from user's id and token
             const link = `https://starducks.herokuapp.com/resetPassword/${user._id}/${token}`;
-            //send the mail
             const mailOptions = {
-                from: 'ajinkya.kamble016@email.com',
+                from: 'starduckstps@gmail.com',
                 to: Email,
                 subject: 'Password recovery Code',
-                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Password recovery Code is</h3><br/><h2 style="color:#2f6ef7"><b>' + link + '</b></h2>.<br/></br><p>Dear ' + user.Firstname + " " + user.Lastname + ',your password code is mentioned above. Don\'t share this with anybody else.<br/>Thanks</p></div>'// plain text body
+                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Password recovery Code is</h3><br/><h2 style="color:#2f6ef7"><b>' + link + '</b></h2>.<br/></br><p>Dear ' + user.Firstname + " " + user.Lastname + ',your password code is mentioned above. Don\'t share this with anybody else.<br/>Thanks</p></div>'
             };
             await mailSendDetails.sendMail(mailOptions);
-
-            //SUCCESS!
             res.json({
                 status: "sucees",
                 message: "Password recovery code sent"
             });
         } else {
-            //if user with the email does not exists, then, send error
             res.json({
                 status: "error",
                 message: "User with this email does not exist"
@@ -363,47 +294,31 @@ app.post('/forgotPasswprd', async (req, res, next) => {
 
 
 app.post('/resetPassword/:_id/:token', async (req, res) => {
-    //Always put your code in try - catch block to see if everything is working smoothly or not. sometimes the code is right but the request may have fault, so just to be free from it use this habbit.
     try {
-        //get the variables used in url
         const { _id, token } = req.params;
-        //get credentials
         const { Password, confirmPassword } = req.body;
-
-        //check user
         const user = await User.findOne({ _id });
         if (user) {
-            //if user with email exists, then check the jwt token from the link
-            const secret = JWTsecretToken + user.Password;//unique jwt secret with normal secret and password
+            const secret = JWTsecretToken + user.Password;
 
             JWT.verify(token, secret, (err, decode) => {
-                //callback used to ensure we send invalid link error if err gets true. We could do it in catch block also, but this is more systimatic and error would be sent only for THIS issue.
                 if (err) {
-                    //if something go wrong, i.e. wrong secret etc.
                     res.json({
                         status: "error",
                         message: "This link is invalid"
                     });
                 } else {
-                    //If there is no error, then, check that the paswords match or not. We can do this at client side also, but better we check everything at one place, and backend is only possible.
                     if (Password == confirmPassword) {
 
-                        user.Password = Password;//change the user's data
-
-                        /*** save the changed user data. NOTE: Use .save() method ONLY i.e. not doucment.updateMany(), etc 
-                        as we hash the password before updating it in database from "pre" method in ./models/users.js. 
-                        if we do from other method, we'll need to rewrite the code of hash again to make it secure. ***/
+                        user.Password = Password;
                         user.save().then(async () => {
-                            //send the mail
                             const mailOptions = {
-                                from: 'ajinkya.kamble016@email.com',
+                                from: 'starduckstps@gmail.com',
                                 to: user.Email,
                                 subject: 'Password has been changed',
-                                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Password of your account has been changed!</h3></br><p>Dear ' + user.Firstname + " " + user.Lastname + ',Your account\'s password has been changed recently. If you were not it, then we applogise about it. Please delete your account after having backed up your data to ensure safety. <br/>Thanks</p></div>'// plain text body
+                                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Password of your account has been changed!</h3></br><p>Dear ' + user.Firstname + " " + user.Lastname + ',Your account\'s password has been changed recently. If you were not it, then we applogise about it. Please delete your account after having backed up your data to ensure safety. <br/>Thanks</p></div>'
                             };
                             await mailSendDetails.sendMail(mailOptions);
-
-                            //SUCCESS!
                             res.json({
                                 status: "succes",
                                 message: "Password changed successfully"
@@ -420,7 +335,6 @@ app.post('/resetPassword/:_id/:token', async (req, res) => {
             });
 
         } else {
-            //if user with the id does not exist, then, send error
             res.json({
                 status: "error",
                 message: "This link is invalid"
@@ -431,6 +345,41 @@ app.post('/resetPassword/:_id/:token', async (req, res) => {
     }
 })
 
+app.post('/contactUs', auth, async (req, res) => {
+    try {
+        const { fullName, topic, message, _id } = req.body;
+
+        const user = await User.findOne({ _id });
+        if (user) {
+            const email = user.Email;
+            const createMessage = new Message({
+                user: _id,
+                email,
+                topic,
+                message
+            });
+
+            await createMessage.save();
+            res.json({
+                status: "success",
+                message: "Message has been sent. Thank you for contacting us"
+            })
+
+        } else {
+            res.json({
+                status: "error",
+                message: "something went wrong"
+            });
+        }
+    } catch (e) {
+        console.log(e);
+        res.json({
+            status: "error",
+            message: e
+        })
+    }
+
+});
 
 app.listen(port, () => {
     console.log('Wohoo! yout server has been stated on port', port, "!");

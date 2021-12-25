@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    DOB: {
+        type: Date,
+        required: true
+    },
     Joined_at: {
         type: Date,
         required: true
@@ -38,6 +42,11 @@ const userSchema = new mongoose.Schema({
     code: {
         type: Number,
         required:true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 

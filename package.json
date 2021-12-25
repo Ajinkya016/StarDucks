@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "npm run css && nodemon ./src/app.js",
+    "css": "npx tailwindcss -i ./tailwindsrc.css -o ./public/css/tailwindcss.css"
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,11 @@
   },
   "homepage": "https://github.com/Ajinkya016/StarDucks#readme",
   "dependencies": {
-    "@tailwindcss/forms": "^0.3.4",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.0",
     "alpinejs": "^3.7.0",
+    "aos": "^2.3.4",
     "autoprefixer": "^10.4.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
@@ -32,12 +36,8 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
     "mongoose": "^5.13.2",
-    "node-cron": "^3.0.0",
     "nodemailer": "^6.7.1",
-    "sweetalert2": "^11.2.1",
-    "tailwindcss": "^2.2.19",
-    "toastify-js": "^1.11.1"
+    "tailwindcss": "^3.0.1"
   }
 }

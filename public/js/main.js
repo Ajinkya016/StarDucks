@@ -1,8 +1,22 @@
 // window.addEventListener("load", () => {
 "use strict"
 
-
-const showIt = (data, status) => {
+const animateValue = (id, start, end, duration) => {
+  if (start === end) return;
+  var range = end - start;
+  var current = start;
+  var increment = end > start? 1 : -1;
+  var stepTime = Math.abs(Math.floor(duration / range));
+  var obj = document.getElementById(id);
+  var timer = setInterval(function() {
+      current += increment;
+      obj.innerHTML = current;
+      if (current == end) {
+          clearInterval(timer);
+      }
+  }, stepTime);
+}
+const showIt = (DOM, data, status) => {
   let html = "";
   let list = "";
   let num = 0;
@@ -12,9 +26,9 @@ const showIt = (data, status) => {
     num++;
   });
 
+
   if (num > 1) {
     html += status == "error" ? `
-      <!-- This example requires Tailwind CSS v2.0+ -->
 <div x-data="{showAlert: true}"  x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-90"
         x-transition:enter-end="opacity-100 transform scale-100"
@@ -53,7 +67,6 @@ const showIt = (data, status) => {
 </div>
 </div>
 ` : `
-<!-- This example requires Tailwind CSS v2.0+ -->
 <div x-data="{showAlert: true}"  x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-90"
         x-transition:enter-end="opacity-100 transform scale-100"
@@ -100,7 +113,7 @@ const showIt = (data, status) => {
 </div>
 `
   } else {
-    html += status == "error" ? `<!-- This example requires Tailwind CSS v2.0+ -->
+    html += status == "error" ? `
       <div x-data="{showAlert: true}"  x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-90"
         x-transition:enter-end="opacity-100 transform scale-100"
@@ -132,7 +145,7 @@ const showIt = (data, status) => {
           </div>
         </div>
       </div>
-      ` : `<!-- This example requires Tailwind CSS v2.0+ -->
+      ` : `
       <div x-data="{showAlert: true}"  x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-90"
         x-transition:enter-end="opacity-100 transform scale-100"
@@ -167,7 +180,7 @@ const showIt = (data, status) => {
       `
   }
 
-  document.querySelector('.alert').innerHTML = html;
+  document.querySelector(DOM).innerHTML = html;
 }
 const getParameterByName = (name, url = window.location.href) => {
   name = name.replace(/[\[\]]/g, '\\$&');

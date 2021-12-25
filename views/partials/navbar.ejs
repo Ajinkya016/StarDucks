@@ -1,112 +1,136 @@
-<div  x-data="{ mobileMenuOpen: false }" class=" bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
-        <div class="flex justify-start lg:w-0 lg:flex-1">
-          <a class="text-2xl uppercase font-extrabold text-blue-600" href="#">
-            <!-- <span class="sr-only">Workflow</span>
-            <img class="h-8 w-auto sm:h-10" src="https://tailwindui.com/img/logos/workflow-mark-blue-600.svg" alt=""> -->
-                The Star Ducks
-        </a>
-        </div>
-        <div class="-mr-2 -my-2 md:hidden">
-          <button @click="mobileMenuOpen = true" type="button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-expanded="false">
-            <span class="sr-only">Open menu</span>
-            <!-- Heroicon name: outline/menu -->
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-        <nav class="hidden md:flex space-x-10">
-          
-          <a href="/#" class="text-base font-medium text-gray-500 hover:text-gray-900">
-            Home
-          </a>
-          <a href="/#AboutSite" class="text-base font-medium text-gray-500 hover:text-gray-900">
-            About Site
-          </a>
-          <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-            About Us
-          </a>
-          <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-            Newsletter
-          </a>
-          <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-            Contact
-          </a>
-          <a href="/logoutall" class="text-base font-medium text-gray-500 hover:text-gray-900">
-            Logout from all
-          </a>
+<!-- x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95"  -->
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav x-data="{open: false, profile: false}" class="bg-white shadow">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex justify-between h-16">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+        <!-- Mobile menu button -->
+        <button type="button"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+          @click="open = !open" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
 
-        </nav>
-        <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-          <a href="/logout" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
-            logout
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block h-6 w-6" :class="{ 'hidden': open, 'block': !(open) }" xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden h-6 w-6" :class="{ 'block': open, 'hidden': !(open) }" xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex-shrink-0 flex items-center">
+          <span class="block lg:hidden text-2xl text-blue-600 font-extrabold w-auto">THE STAR'DUCKS</span>
+          <span class="hidden lg:block text-2xl text-blue-600 font-extrabold w-auto">THE STAR'DUCKS</span>
+        </div>
+        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+          <a href="#"
+            class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+            Dashboard
+          </a>
+          <a href="#"
+            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+            Team
+          </a>
+          <a href="#"
+            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+            Projects
+          </a>
+          <a href="#"
+            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+            Calendar
           </a>
         </div>
       </div>
-    </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
-    <!--
-      Mobile menu, show/hide based on mobile menu state.
-
-      Entering: "duration-200 ease-out"
-        From: "opacity-0 scale-95"
-        To: "opacity-100 scale-100"
-      Leaving: "duration-100 ease-in"
-        From: "opacity-100 scale-100"
-        To: "opacity-0 scale-95"
-    -->
-    <div x-description="Mobile menu, show/hide based on mobile menu state." x-show="mobileMenuOpen" x-transition:enter="duration-150 ease-out" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="duration-100 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute top-0 inset-x-0 z-10 p-2 transition transform origin-top-right md:hidden">
-      <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
-        <div class="pt-5 pb-6 px-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-2xl font-extrabold text-blue-500 uppercase">The Star DUcks</div>
-            </div>
-            <div class="-mr-2">
-              <button @click="mobileMenuOpen = false" type="button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                <span class="sr-only">Close menu</span>
-                <!-- Heroicon name: outline/x -->
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="py-6 px-5 space-y-6">
-          <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-            <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">
-              Home
-            </a>
-
-            <a href="#AboutSite" class="text-base font-medium text-gray-900 hover:text-gray-700">
-              About Site
-            </a>
-
-            <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-              About us
-            </a>
-
-            <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-              newsletter
-            </a>
-
-            <a href="javascript:void(0)" class="text-gray-200 text-base font-medium">
-              Contact us
-            </a>
-
-            <a href="/logoutall" class="text-base font-medium text-gray-900 hover:text-gray-700">
-              Logout from all devices
-            </a>
-          </div>
+        <!-- Profile dropdown -->
+        <div class="ml-3 relative z-10 ">
           <div>
-            <a href="/logout" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
-              logout
-            </a>
+            <button type="button" @click="profile = !profile"
+              class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="sr-only">Open user menu</span>
+              <img class="h-8 w-8 rounded-full" src="images/blank-profile-picture-973460.svg" alt="">
+            </button>
+          </div>
+          <div x-show="profile"
+            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+            @click.away="profile = false" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="transform opacity-0 scale-95"
+            x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="transform opacity-100 scale-100"
+            x-transition:leave-end="transform opacity-0 scale-95" role="menu" aria-orientation="vertical"
+            aria-labelledby="user-menu-button" tabindex="-1">
+            <div class="px-4 py-3" role="none">
+              <p class="text-sm" role="none">
+                Signed in as
+              </p>
+              <p class="text-sm font-medium text-gray-900 truncate" role="none">
+                <%- email %>
+              </p>
+            </div>
+            <div class="py-1" role="none">
+              <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+              <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                id="menu-item-0">Account settings</a>
+              <a href="/terms&conditions" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                id="menu-item-1">Terms</a>
+              <a href="/privacyPolicy" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                id="menu-item-2">Privacy policy</a>
+              <a href="/cookiePolicy" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                id="menu-item-2">Cookie policy</a>
+            </div>
+            <div class="pt-2 pb-1" role="none">
+              <form method="GET" action="/logout" role="none">
+                <button type="submit" class="text-gray-600 block w-full text-left px-4 py-2 text-sm hover:text-gray-900" role="menuitem"
+                  tabindex="-1" id="menu-item-3">
+                   Logout
+                </button>
+              </form>
+            </div>
+            <div class="pt-0 pb-1" role="none">
+              <form method="GET" action="/logoutall" role="none">
+                <button type="submit" class="text-gray-600 block w-full text-left px-4 py-2 text-sm hover:text-gray-900" role="menuitem"
+                  tabindex="-1" id="menu-item-3">
+                   Logout from all devices
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="sm:hidden" x-show="open" id="mobile-menu">
+    <div class="pt-2 pb-4 space-y-1">
+      <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
+      <a href="#"
+        class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Dashboard</a>
+      <a href="#"
+        class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Team</a>
+      <a href="#"
+        class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Projects</a>
+      <a href="#"
+        class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Calendar</a>
+    </div>
+  </div>
+</nav>
