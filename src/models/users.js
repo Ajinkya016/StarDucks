@@ -43,9 +43,18 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
+    About: {
+        type: String,
+        required: false
+    },
+    Subscriber: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     isAdmin: {
         type: Boolean,
-        required: false,
+        required: true,
         default: false
     }
 });

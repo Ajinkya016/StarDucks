@@ -11,20 +11,26 @@ const auth = async (req, res, next) => {
         const TokenColl = await Token.find({ user: verifyUser.id });
         const User = await Register.findOne({_id: verifyUser.id});
         
-        if(TokenColl.length == 0){ //which will not happen if the user logs out as we delte the cookie from browser, but if some bug or user error occures, it shall not affect UX
-            res.render("signin");
-
+        if(User){
+            if(TokenColl.length == 0){ //which will not happen if the user logs out as we delte the cookie from browser, but if some bug or user error occures, it shall not affect UX
+                res.render("signin");
+    
+            }else{
+                TokenColl.forEach(doc => {
+                    if (token == doc.token) {
+                        req.token = token;
+                        req.user = User;
+                        req.isUser = true;
+            
+                        next();
+            
+                    }
+                });
+            }
         }else{
-            TokenColl.forEach(doc => {
-                if (token == doc.token) {
-                    req.token = token;
-                    req.user = User;
-                    req.isUser = true;
-        
-                    next();
-        
-                }
-            });
+            
+        res.render("signin");
+
         }
         
 

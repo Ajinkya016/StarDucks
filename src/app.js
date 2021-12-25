@@ -41,6 +41,22 @@ app.get('/', auth, async (req, res) => {
         email: req.user.Email
     });
 });
+app.get('/account', auth, async (req, res) => {
+    res.render('account', {
+        TotalUsers: await User.estimatedDocumentCount(),
+        _id: req.user._id,
+        user: req.user,
+        email: req.user.Email
+    });
+});
+app.get('/seasons', auth, async (req, res) => {
+    res.render('seasons', {
+        TotalUsers: await User.estimatedDocumentCount(),
+        _id: req.user._id,
+        user: req.user,
+        email: req.user.Email
+    });
+});
 
 app.get('/admin', admin, async (req, res) => {
     res.send("adminsONLY")
@@ -104,6 +120,8 @@ app.get('/logoutall', auth, async (req, res) => {
         console.log(e);
     }
 });
+
+
 app.get('*', (req, res) => res.status(404).render('404'));
 
 app.post('/signup', async (req, res) => {
@@ -344,6 +362,45 @@ app.post('/resetPassword/:_id/:token', async (req, res) => {
     } catch (e) {
         console.log(e);
     }
+});
+
+app.post('/newsletter', auth, async (req, res) => {
+    try {
+        const { email, _id } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (user) {
+
+            const mailOptions = {
+                from: 'starduckstps@gmail.com',
+                to: user.Email,
+                subject: 'Subscribtion for newsletter',
+                html: '<div stye="width:100%;height: 100%; padding:50px; font-family: sans-serif;"><h3>Congratulations! You have successfully subscribed to our newsletter</h3></br><p>Dear ' + user.Firstname + "&nbsp;" + user.Lastname + ',Your account has subscribed to our newsletter. You\'l get the notifications about the new season launches, updates and alerts <br/>Thanks</p></div>'
+            };
+            user.Subscriber = true;
+
+            await user.save();
+            await mailSendDetails.sendMail(mailOptions);
+
+            res.json({
+                status: "success",
+                message: "You have successfully subscribed to the newsletter of the star ducks"
+            });
+
+        } else {
+            res.json({
+                status: "error",
+                message: "You can only subscribe with your regestered email id (" + req.user.Email + ")"
+            });
+        }
+
+    } catch (e) {
+        res.json({
+            status: "error",
+            message: e
+        });
+    }
 })
 
 app.post('/contactUs', auth, async (req, res) => {
@@ -382,6 +439,63 @@ app.post('/contactUs', auth, async (req, res) => {
 
 });
 
+app.post('/saveAcc', auth, async (req, res) => {
+    try {
+        const { about, Firstname, Lastname, DOB, password, Gender, _id } = req.body;
+        const Age = Math.floor(((Date.now() - new Date(DOB)) / (31557600000)));
+
+        const user = await User.findOne({ _id });
+
+        if (user) {
+
+            user.About = about;
+            user.Firstname = Firstname;
+            user.Lastname = Lastname;
+            user.DOB = DOB;
+            user.Age = Age;
+            user.Gender = Gender;
+           if(password != "") user.Password = password;
+
+            await user.save();
+
+            res.json({
+                status: "success",
+                message: "Changes saved successfully!"
+            })
+
+        } else {
+            res.json({
+                status: "error",
+                message: "Something went wrong"
+            })
+        }
+    } catch (e) {
+        res.json({
+            status: "error",
+            message: e
+        });
+    }
+
+});
+//Delete request
+app.delete('/account', auth, async (req, res) => {
+    try {
+        const { _id } = req.body;
+
+        console.log(_id);
+        await User.deleteOne({ _id });
+        await Token.deleteMany({ _id });
+        res.json({
+            status: "success",
+            message: "account deleted successfullt"
+        });
+    } catch (e) {
+        res.json({
+            status: "error",
+            message: e
+        });
+    }
+});
 app.listen(port, () => {
     console.log('Wohoo! yout server has been stated on port', port, "!");
 });

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/app.js",
     "dev": "npm run css && nodemon ./src/app.js",
-    "css": "npx tailwindcss -i ./tailwindsrc.css -o ./public/css/tailwindcss.css"
+    "css": "npx tailwindcss -i ./tailwindsrc.css -o ./public/css/tailwindcss.css "
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
     "nodemailer": "^6.7.1",
-    "tailwindcss": "^3.0.1"
+    "tailwindcss": "^3.0.7"
   }
 }

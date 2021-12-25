@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+
+<head>
+    <title>Star Ducks</title>
+    <%- include('./partials/links.ejs') %>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs') %>
+
+        <div>
+            <div class="relative bg-blue-700 pb-32 overflow-hidden">
+                <header class="relative py-10">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 class="text-3xl font-bold text-white">
+                            Settings
+                        </h1>
+                    </div>
+                </header>
+            </div>
+
+            <main class="relative -mt-32">
+                <div class="max-w-screen-xl mx-auto pb-6 px-4 sm:px-6 lg:pb-16 lg:px-8">
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div>
+                            <form class=" divide-gray-200 lg:col-span-9 px-20 " id="form">
+                                <div class="alert"></div>
+                                <!-- Profile section -->
+                                <div class="py-6 px-4 sm:p-6 lg:pb-8">
+                                    <div>
+                                        <h2 class="text-lg leading-6 font-medium text-gray-900">Profile</h2>
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            This information will be displayed publicly so be careful what you share.
+                                        </p>
+                                    </div>
+
+                                    <div class="mt-6 flex flex-col lg:flex-row">
+                                        <div class="flex-grow space-y-6">
+
+                                            <div>
+                                                <label for="email" class="block text-sm font-medium text-gray-700">
+                                                    Email
+                                                </label>
+                                                <div class="mt-1 rounded-md shadow-sm flex">
+                                                    <span
+                                                        class="bg-gray-50 border border-r-0 border-gray-300 rounded-l-md px-3 inline-flex items-center text-gray-500 sm:text-sm">
+                                                        Can't&nbsp;Change&nbsp;this&nbsp;field.
+                                                    </span>
+                                                    <input type="text" name="email" id="email" autocomplete="email"
+                                                        class=" truncate focus:ring-blue-500 focus:border-blue-500 flex-grow block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                                        disabled value="<%- email %>">
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label for="about" class="block text-sm font-medium text-gray-700">
+                                                    About
+                                                </label>
+                                                <div class="mt-1">
+                                                    <textarea id="about" name="about" rows="3"
+                                                        class="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+                                                </div>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    Brief description for you (This can be shared, but I don't think we
+                                                    need this info)
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-6 grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <label for="Firstname"
+                                                class="block text-sm font-medium text-gray-700">First name</label>
+                                            <input type="text" name="Firstname" id="Firstname"
+                                                autocomplete="given-name"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                value="<%- user.Firstname%>">
+                                        </div>
+
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <label for="Lastname" class="block text-sm font-medium text-gray-700">Last
+                                                name</label>
+                                            <input type="text" name="Lastname" id="Lastname"
+                                                autocomplete="family-name"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                value="<%- user.Lastname%>">
+                                        </div>
+
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <label for="DOB" class="block text-sm font-medium text-gray-700">DOB</label>
+                                            <input type="date" name="DOB" id="DOB"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                value="<%- new Date(user.DOB).toISOString().split('T')[0] %>">
+                                        </div>
+
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <label for="password"
+                                                class="block text-sm font-medium text-gray-700">password</label>
+                                            <input type="password" name="password" id="password"
+                                                autocomplete="organization"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="col-span-12 sm:col-span-12">
+                                            <div>
+                                                <label class="text-base font-medium text-gray-900">Gender</label>
+                                                <p class="text-sm leading-5 text-gray-500">How do you change your gender
+                                                    but?</p>
+                                                <fieldset class="mt-4">
+                                                    <legend class="sr-only">Choose gender</legend>
+                                                    <div class="space-y-4">
+                                                        <div class="flex items-center">
+                                                            <input id="male" name="Gender" type="radio"
+                                                                checked value="Male"
+                                                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                            <label for="male"
+                                                                class="ml-3 block text-sm font-medium text-gray-700">
+                                                                Male
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="flex items-center">
+                                                            <input id="female" name="Gender" type="radio" value="Female"
+                                                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                            <label for="female"
+                                                                class="ml-3 block text-sm font-medium text-gray-700">
+                                                                Female
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="flex items-center">
+                                                            <input id="Other" name="Gender" type="radio" value="Other"
+                                                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                            <label for="Other"
+                                                                class="ml-3 block text-sm font-medium text-gray-700">
+                                                                Other (for eg: kritika divedi)
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <!-- Privacy section -->
+                                <div class="pt-6 divide-y divide-gray-200">
+                                    <div class="px-4 sm:px-6">
+                                        <div>
+                                            <h2 class="text-lg leading-6 font-medium text-gray-900">Delete Your account
+                                            </h2>
+                                            <p class="mt-1 py-3 px-2 text-sm text-gray-500">
+                                                <button type="button" id="delete"
+                                                    class="inline-flex items-center px-6 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                    Delete
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 py-4 px-4 flex justify-end sm:px-6">
+                                        <button type="button"
+                                            class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" id="save"
+                                            class="ml-5 bg-blue-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+
+        <script>
+            $(document).ready(function () {
+                $("#form").submit(function (e) {
+
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                    var form = $(this);// agar es6 wale me karna h to $("#contact") use kar, varna ye timesaver accha h
+                    var url = '/saveAcc';
+                    $("#save").attr("disabled", "true");
+                    $("#save").html("<span>Loading...</span>");
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: form.serialize() + `&_id=<%- _id %>`,
+                        success: data => {
+                            console.log(data.message);
+                            if (data.status == "error") {
+                                showIt(".alert", data.message, "error");
+                                $("#save").removeAttr("disabled");
+                                $("#save").html("<span>save</span>");
+
+
+                            } else {
+                                showIt(".alert", data.message, "success");
+                                $("#save").removeAttr("disabled");
+                                $("#save").html("<span>save</span>");
+                            }
+                        }
+                    });
+
+
+                });
+                $("#delete").click(function (e) {
+
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                    // agar es6 wale me karna h to $("#contact") use kar, varna ye timesaver accha h
+                    var url = '/account';
+                    $(this).attr("disabled", "true");
+                    $(this).html("<span>Loading...</span>");
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: url,
+                        data: "_id=<%- _id %>",
+                        success: data => {
+                            if (data.status == "error") {
+                                showIt('.alert',data.message,"error")
+                            } else {
+                                window.location.href = "/login"
+                            }
+                        }
+                    });
+
+
+                });
+            });
+        </script>
+
+        <%- include('./partials/footer.ejs') %>
+</body>
+
+</html>
