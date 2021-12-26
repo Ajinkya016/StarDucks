@@ -154,7 +154,10 @@ app.post('/signup', async (req, res) => {
                 DOB,
                 Joined_at: new Date(),
                 emailVerification: false,
-                code
+                code,
+                Subscriber: false,
+                isAdmin: false,
+                About:""
             }).save();
             const mailOptions = {
                 from: 'starduckstps@gmail.com',
